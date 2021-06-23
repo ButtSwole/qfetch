@@ -1,29 +1,9 @@
-type ReqArgsWithParams = [
-  baseUrl: string,
-  params?: Record<string, any>,
-  init?: Omit<RequestInit, "body" | "method">
-];
-
-type ReqArgsWithBody = [
-  url: string,
-  body?: any,
-  init?: Omit<RequestInit, "body" | "method">
-];
-
-const fetchWithParams = async (method: string, ...args: ReqArgsWithParams) => {
-  const [baseUrl, params, init] = args;
-  const fullUrl = baseUrl + "?" + new URLSearchParams(params);
-  const res = await fetch(fullUrl, { method, ...init });
-  if (!res.ok) throw new Error(res.statusText);
-  return await res.json();
-};
-
-const fetchWithBody = async (method: string, ...args: ReqArgsWithBody) => {
-  const [url, body, init] = args;
-  const res = await fetch(url, { body, method, ...init });
-  if (!res.ok) throw new Error(res.statusText);
-  return await res.json();
-};
+import {
+  fetchWithBody,
+  fetchWithParams,
+  ReqArgsWithBody,
+  ReqArgsWithParams
+} from './utils';
 
 const qfetch = {
   delete: async (...args: ReqArgsWithParams) => (
