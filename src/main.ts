@@ -1,3 +1,15 @@
+type ReqArgsWithParams = [
+  baseUrl: string,
+  params?: Record<string, any>,
+  init?: Omit<RequestInit, "body" | "method">
+];
+
+type ReqArgsWithBody = [
+  url: string,
+  body?: any,
+  init?: Omit<RequestInit, "body" | "method">
+];
+
 const fetchWithParams = async (method: string, ...args: ReqArgsWithParams) => {
   const [baseUrl, params, init] = args;
   const fullUrl = baseUrl + "?" + new URLSearchParams(params);
@@ -13,37 +25,34 @@ const fetchWithBody = async (method: string, ...args: ReqArgsWithBody) => {
   return await res.json();
 };
 
-type ReqArgsWithParams = [
-  baseUrl: string,
-  params?: Record<string, any>,
-  init?: Omit<RequestInit, "body" | "method">
-];
-type ReqArgsWithBody = [
-  url: string,
-  body?: any,
-  init?: Omit<RequestInit, "body" | "method">
-];
-
 const qfetch = {
-  delete: async (...args: ReqArgsWithParams) =>
-    await fetchWithParams("DELETE", ...args),
+  delete: async (...args: ReqArgsWithParams) => (
+    await fetchWithParams("DELETE", ...args)
+  ),
 
-  get: async (...args: ReqArgsWithParams) =>
-    await fetchWithParams("GET", ...args),
+  get: async (...args: ReqArgsWithParams) => (
+    await fetchWithParams("GET", ...args)
+  ),
 
-  head: async (...args: ReqArgsWithParams) =>
-    await fetchWithParams("HEAD", ...args),
+  head: async (...args: ReqArgsWithParams) => (
+    await fetchWithParams("HEAD", ...args)
+  ),
 
-  options: async (...args: ReqArgsWithParams) =>
-    await fetchWithParams("OPTIONS", ...args),
+  options: async (...args: ReqArgsWithParams) => (
+    await fetchWithParams("OPTIONS", ...args)
+  ),
 
-  patch: async (...args: ReqArgsWithBody) =>
-    await fetchWithBody("PATCH", ...args),
+  patch: async (...args: ReqArgsWithBody) => (
+    await fetchWithBody("PATCH", ...args)
+  ),
 
-  post: async (...args: ReqArgsWithBody) =>
-    await fetchWithBody("POST", ...args),
+  post: async (...args: ReqArgsWithBody) => (
+    await fetchWithBody("POST", ...args)
+  ),
 
-  put: async (...args: ReqArgsWithBody) => await fetchWithBody("PUT", ...args),
+  put: async (...args: ReqArgsWithBody) => (
+    await fetchWithBody("PUT", ...args)
+  ),
 };
 
 export default qfetch;
