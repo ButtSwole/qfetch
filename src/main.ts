@@ -1,52 +1,71 @@
 type QRequestInit = Omit<RequestInit, "body" | "method">;
-type QRequestParams = Record<string, string>;
+type QRequestParams = Record<string, any>;
 
-const getFullUrl = (url: string, params?: QRequestParams) =>
-  url + "?" + new URLSearchParams(params).toString();
-
-const fetchWrapper = async (
+const fetch_ = async (
   url: string,
   params?: QRequestParams,
   init?: RequestInit
 ) => {
-  const res = await fetch(getFullUrl(url, params), init);
+  const fullUrl = url + "?" + new URLSearchParams(params);
+  const res = await fetch(fullUrl, init);
   if (!res.ok) throw new Error(res.statusText);
   return await res.json();
 };
 
 const qfetch = {
-  delete: async (url: string, params?: QRequestParams, init?: QRequestInit) =>
-    await fetchWrapper(url, params, { method: "DELETE", ...init }),
+  delete: async (
+    baseUrl: string,
+    params?: QRequestParams,
+    init?: QRequestInit
+  ) => await fetch_(baseUrl, params, { method: "DELETE", ...init }),
 
-  get: async (url: string, params?: QRequestParams, init?: QRequestInit) =>
-    await fetchWrapper(url, params, { method: "GET", ...init }),
+  get: async (baseUrl: string, params?: QRequestParams, init?: QRequestInit) =>
+    await fetch_(baseUrl, params, { method: "GET", ...init }),
 
-  head: async (url: string, params?: QRequestParams, init?: QRequestInit) =>
-    await fetchWrapper(url, params, { method: "HEAD", ...init }),
+  head: async (baseUrl: string, params?: QRequestParams, init?: QRequestInit) =>
+    await fetch_(baseUrl, params, { method: "HEAD", ...init }),
 
-  options: async (url: string, params?: QRequestParams, init?: QRequestInit) =>
-    await fetchWrapper(url, params, { method: "OPTIONS", ...init }),
+  options: async (
+    baseUrl: string,
+    params?: QRequestParams,
+    init?: QRequestInit
+  ) => await fetch_(baseUrl, params, { method: "OPTIONS", ...init }),
 
   patch: async (
-    url: string,
+    baseUrl: string,
+    data?: any,
     params?: QRequestParams,
-    body?: BodyInit,
     init?: QRequestInit
-  ) => await fetchWrapper(url, params, { body, method: "PATCH", ...init }),
+  ) =>
+    await fetch_(baseUrl, params, {
+      body: JSON.stringify(data),
+      method: "PATCH",
+      ...init,
+    }),
 
   post: async (
-    url: string,
+    baseUrl: string,
+    data?: any,
     params?: QRequestParams,
-    body?: BodyInit,
     init?: QRequestInit
-  ) => await fetchWrapper(url, params, { body, method: "POST", ...init }),
+  ) =>
+    await fetch_(baseUrl, params, {
+      body: JSON.stringify(data),
+      method: "POST",
+      ...init,
+    }),
 
   put: async (
-    url: string,
+    baseUrl: string,
+    data?: any,
     params?: QRequestParams,
-    body?: BodyInit,
     init?: QRequestInit
-  ) => await fetchWrapper(url, params, { body, method: "PUT", ...init }),
+  ) =>
+    await fetch_(baseUrl, params, {
+      body: JSON.stringify(data),
+      method: "PUT",
+      ...init,
+    }),
 };
 
 export default qfetch;
